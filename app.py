@@ -6,7 +6,7 @@ from PIL import Image
 import re
 import pickle
 
-pytesseract_path = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+pytesseract_path = r'ocr\tesseract.exe'
 pytesseract.pytesseract.tesseract_cmd = pytesseract_path
 
 

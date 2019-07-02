@@ -9,4 +9,4 @@ Python 3.7+
 ```py -m pip install -r requirements.txt``` for required packages
 
 Usage:
-    Run app.py.
+    Run app.py while in a wild Pokemon battle. Don't move your battle screen while the app is on afterwards.

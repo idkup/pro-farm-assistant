@@ -4,6 +4,7 @@ import time
 import numpy as np
 from PIL import Image
 import re
+import pickle
 
 pytesseract_path = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 pytesseract.pytesseract.tesseract_cmd = pytesseract_path
@@ -15,7 +16,13 @@ class EncounterTracker:
         self.bx = bx
         self.lastMon = ""
         self.count = 0
-        self.encounters = {}
+        with open('files/encounters.txt', 'rb') as f:
+            try:
+                self.encounters = pickle.load(f)
+            except EOFError:
+                self.encounters = {}
+            f.close()
+        print(self.encounters)
 
     def main(self):
         sc = pyautogui.screenshot().crop((self.bx.left, self.bx.top, self.bx.left + 250, self.bx.top + self.bx.height))
@@ -38,6 +45,9 @@ class EncounterTracker:
                     self.encounters[p] += 1
                 except KeyError:
                     self.encounters[p] = 1
+                with open('files/encounters.txt', 'wb+') as f:
+                    pickle.dump(self.encounters, f)
+                    f.close()
             self.count += 1
         self.lastMon = t
         time.sleep(2)

@@ -6,8 +6,6 @@ from PIL import Image
 import re
 import json
 
-pytesseract.pytesseract.tesseract_cmd = r'ocr\tesseract.exe'
-
 
 class EncounterTracker:
     def __init__(self):
@@ -15,7 +13,7 @@ class EncounterTracker:
         self.bx = bx
         self.lastMon = ""
         self.count = 0
-        with open('files/encounters.txt', 'r') as f:
+        with open('files/encounters.json', 'r') as f:
             try:
                 self.encounters = json.load(f)
             except EOFError:
@@ -39,12 +37,15 @@ class EncounterTracker:
         if self.lastMon == '':
             p = re.split(' ', t)[-1]
             if p != '':
+                if p.lower() not in dex.keys():
+                    time.sleep(2)
+                    return
                 print(p)
                 try:
                     self.encounters[p] += 1
                 except KeyError:
                     self.encounters[p] = 1
-                with open('files/encounters.txt', 'w+') as f:
+                with open('files/encounters.json', 'w+') as f:
                     json.dump(self.encounters, f)
                     f.close()
             self.count += 1
@@ -52,6 +53,10 @@ class EncounterTracker:
         time.sleep(2)
 
 
+pytesseract.pytesseract.tesseract_cmd = r'ocr\tesseract.exe'
+with open('files/pokedex.json', 'r') as dexfile:
+    dex = json.load(dexfile)
+    dexfile.close()
 a = EncounterTracker()
 while True:
     for i in range(10):

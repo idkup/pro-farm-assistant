@@ -1,4 +1,4 @@
-files/encounters.txt
+files/encounters.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

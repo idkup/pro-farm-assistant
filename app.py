@@ -16,7 +16,7 @@ class EncounterTracker:
         with open('files/encounters.json', 'r') as f:
             try:
                 self.encounters = json.load(f)
-            except EOFError:
+            except FileNotFoundError:
                 self.encounters = {}
             f.close()
         print(self.encounters)

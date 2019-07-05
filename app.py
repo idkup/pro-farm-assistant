@@ -11,12 +11,12 @@ class EncounterTracker:
     def __init__(self):
         bx = pyautogui.locateOnScreen('files/vs.png')
         self.bx = bx
-        self.lastMon = ""
+        self.lastMon = ''
         self.count = 0
-        with open('files/encounters.json', 'r') as f:
+        with open('files/encounters.json', 'w+') as f:
             try:
                 self.encounters = json.load(f)
-            except FileNotFoundError:
+            except json.decoder.JSONDecodeError:
                 self.encounters = {}
             f.close()
         print(self.encounters)

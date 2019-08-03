@@ -1,6 +1,5 @@
 import pyautogui
 import pytesseract
-import time
 import numpy as np
 from PIL import Image
 import re
@@ -20,16 +19,24 @@ class EncounterTracker:
                 self.encounters = {}
             f.close()
         print(self.encounters)
-        frame = tk.Frame()
-        frame.pack(side=tk.BOTTOM)
+        frame1 = tk.Frame()
+        frame1.pack(side=tk.BOTTOM)
+        frame2 = tk.Frame()
+        frame2.pack(side=tk.LEFT)
 
-        self.calibrate = tk.Button(frame, text="Calibrate", command=self.reset)
+        self.calibrate = tk.Button(frame1, text="Calibrate", command=self.reset)
         self.calibrate.pack(side=tk.LEFT)
-        self.exit = tk.Button(frame, text="Exit", command=frame.quit)
+        self.exit = tk.Button(frame1, text="Exit", command=root.quit)
         self.exit.pack(side=tk.RIGHT)
 
-        self.startTracking = tk.Button(root, text="Start Tracking", fg="WHITE", bg="GREEN", command=self.main)
-        self.startTracking.pack(side=tk.LEFT)
+        self.startTracking = tk.Button(frame2, text="Start Tracking", fg="WHITE", bg="GREEN", command=self.main)
+        self.startTracking.pack(side=tk.TOP)
+
+        self.label1 = tk.Label(frame2, text="Last Encounter:")
+        self.label1.pack()
+
+        self.lastEncounter = tk.Label(frame2, text="No encounters yet!")
+        self.lastEncounter.pack(side=tk.BOTTOM)
 
         self.encounterBox = tk.Listbox(root)
         self.encounterBox.pack(side=tk.TOP)
@@ -52,14 +59,16 @@ class EncounterTracker:
         sc = Image.fromarray(data)
         t = pytesseract.image_to_string(sc)
         if 'Wild' not in t and t != '':
+            root.after(2000, a.main)
             return
         if self.lastMon == '':
             p = re.split(' ', t)[-1]
             if p != '':
                 if p.lower() not in dex.keys():
-                    time.sleep(2)
+                    root.after(2000, a.main)
                     return
                 print(p)
+                self.lastEncounter.configure(text=p)
                 try:
                     self.encounters[p] += 1
                 except KeyError:

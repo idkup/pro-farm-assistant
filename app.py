@@ -74,10 +74,10 @@ class EncounterTracker:
         root.after(500, self.main)
 
     def main(self):
-        self.message.configure(text=None)
+        self.message.configure(text="")
         if not self.bx:
             self.recalibrate()
-        sc = pyautogui.screenshot().crop((self.bx.left, self.bx.top, self.bx.left + 250, self.bx.top + self.bx.height))
+        sc = pyautogui.screenshot().crop((self.bx.left, self.bx.top, self.bx.left + 500, self.bx.top + self.bx.height))
         sc = sc.convert('RGBA')
         data = np.array(sc)
         r, g, b, t = data.T
@@ -88,16 +88,17 @@ class EncounterTracker:
         sc = Image.fromarray(data)
         t = pytesseract.image_to_string(sc)
         if 'Wild' not in t and t != '':
-            root.after(2000, a.main)
+            root.after(1000, a.main)
             return
         if self.lastMon == '':
             p = re.split(' ', t)[-1]
             if p != '':
                 if p.lower() not in dex.keys():
-                    root.after(2000, self.main)
+                    print(p)
+                    root.after(1000, self.main)
                     return
-                if p == 'Snivy':
-                    tk.messagebox.showinfo('Target Pokemon Alert', f'{p} has spawned!')
+                if p == 'Froakie':
+                    tk.messagebox.showwarning('Target Pokemon Alert', f'{p} has spawned!')
                 self.lastEncounter.configure(text=p)
                 try:
                     self.encounters[p] += 1
